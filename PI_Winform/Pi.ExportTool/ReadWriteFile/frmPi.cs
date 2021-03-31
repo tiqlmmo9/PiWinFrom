@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -81,13 +82,26 @@ namespace Pi.ExportTool.ReadWriteFile
 
         private void GetParams()
         {
-            var paramCount = FindParamCount(richTextBox1, "PI_PARAM");
-            var listParam = new List<string>();
+            //var paramCount = FindParamCount(richTextBox1, "PI_PARAM");
+            //var listParam = new List<string>();
 
-            for (int i = 1; i <= paramCount; i++)
+            //for (int i = 1; i <= paramCount; i++)
+            //{
+            //    var item = "[PI_PARAM" + i + "]";
+            //    listParam.Add(item);
+            //}
+
+            //cbParam.DataSource = listParam;
+            string content = richTextBox1.Text;
+            var listParam = new List<string>();
+            string param = @"\[PI_PARAM[0-9A-Z]*\]";
+            Regex rgx = new Regex(param);
+
+            foreach (Match match in rgx.Matches(content))
             {
-                var item = "[PI_PARAM" + i + "]";
-                listParam.Add(item);
+
+                listParam.Add(match.Value);
+
             }
 
             cbParam.DataSource = listParam;
@@ -302,24 +316,24 @@ namespace Pi.ExportTool.ReadWriteFile
         //    //rtb.SelectionColor = Color.Black;
         //}
 
-        public static int FindParamCount(RichTextBox rtb, string word)
-        {
+        //public static int FindParamCount(RichTextBox rtb, string word)
+        //{
 
-            int startIndex = 0, count = 0;
-            while (startIndex < rtb.TextLength)
-            {
-                int index = rtb.Find(word, startIndex, RichTextBoxFinds.None);
-                if (index != -1)
-                {
-                    count++;
-                }
-                else break;
-                startIndex = index + word.Length;
-            }
+        //    int startIndex = 0, count = 0;
+        //    while (startIndex < rtb.TextLength)
+        //    {
+        //        int index = rtb.Find(word, startIndex, RichTextBoxFinds.None);
+        //        if (index != -1)
+        //        {
+        //            count++;
+        //        }
+        //        else break;
+        //        startIndex = index + word.Length;
+        //    }
 
-            return count;
-            //rtb.SelectionColor = Color.Black;
-        }
+        //    return count;
+        //    //rtb.SelectionColor = Color.Black;
+        //}
 
         private void btnExport_Click(object sender, EventArgs e)
         {
